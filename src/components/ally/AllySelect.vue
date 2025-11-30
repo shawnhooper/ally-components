@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, watch, onUnmounted, ref } from 'vue';
+import { computed, inject, watch, onUnmounted, useSlots } from 'vue';
 import { AllyFormKey } from './allyFormKeys';
 
 interface SelectOption {
@@ -66,14 +66,26 @@ const value = computed({
 // Generate unique IDs for descriptive elements
 const helpTextId = computed(() => `${props.id}-help`);
 const errorTextId = computed(() => `${props.id}-error`);
+const labelId = computed(() => `${props.id}-label`);
 
 // Compute invalid state based on errorMessage prop
 const isInvalid = computed(() => !!props.errorMessage);
+
+const slots = useSlots();
+const describedBy = computed(() => {
+  const ids = [
+    props.ariaDescribedby,
+    slots.helptext ? helpTextId.value : undefined,
+    isInvalid.value ? errorTextId.value : undefined,
+  ].filter(Boolean);
+  const uniqueIds = Array.from(new Set(ids)).filter(id => id !== labelId.value);
+  return uniqueIds.length ? uniqueIds.join(' ') : undefined;
+});
 </script>
 
 <template>
   <div class="form-group" :class="{ 'ally-has-error': isInvalid }">
-    <label v-if="label" :for="id" class="form-label">
+    <label v-if="label" :id="labelId" :for="id" class="form-label">
       {{ label }}
       <span v-if="required" aria-hidden="true" class="text-danger ms-1">*</span>
     </label>
@@ -85,11 +97,8 @@ const isInvalid = computed(() => !!props.errorMessage);
         :class="['form-select', { 'is-invalid': isInvalid }]"
         :aria-required="required"
         :aria-invalid="isInvalid ? 'true' : undefined"
-        :aria-describedby="[
-          props.ariaDescribedby,
-          $slots.helptext ? helpTextId : undefined,
-          isInvalid ? errorTextId : undefined
-        ].filter(Boolean).join(' ') || undefined"
+        :aria-labelledby="label ? labelId : undefined"
+        :aria-describedby="describedBy"
         @blur="$emit('blur', $event)"
       >
         <option value="" disabled>{{ placeholder }}</option>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, watch, onUnmounted, ref } from 'vue';
+import { computed, inject, watch, onUnmounted, useSlots } from 'vue';
 import { AllyFormKey } from './allyFormKeys';
 
 const props = withDefaults(defineProps<{
@@ -60,15 +60,29 @@ const value = computed({
 const helpTextId = computed(() => `${props.id}-help`);
 const errorTextId = computed(() => `${props.id}-error`);
 const counterId = computed(() => `${props.id}-counter`);
+const labelId = computed(() => `${props.id}-label`);
 
 const isInvalid = computed(() => !!props.errorMessage);
 const currentLength = computed(() => String(props.modelValue || '').length);
 const shouldShowCounter = computed(() => props.showCounter && props.maxlength !== undefined);
+
+const slots = useSlots();
+const describedBy = computed(() => {
+  const ids = [
+    props.ariaDescribedby,
+    slots.helptext ? helpTextId.value : undefined,
+    isInvalid.value ? errorTextId.value : undefined,
+    shouldShowCounter.value ? counterId.value : undefined,
+  ].filter(Boolean);
+
+  const uniqueIds = Array.from(new Set(ids)).filter(id => id !== labelId.value);
+  return uniqueIds.length ? uniqueIds.join(' ') : undefined;
+});
 </script>
 
 <template>
   <div class="form-group" :class="{ 'ally-has-error': isInvalid }">
-    <label v-if="label" :for="id" class="form-label">
+    <label v-if="label" :id="labelId" :for="id" class="form-label">
       {{ label }}
       <span v-if="required" aria-hidden="true" class="text-danger ms-1">*</span>
     </label>
@@ -82,12 +96,8 @@ const shouldShowCounter = computed(() => props.showCounter && props.maxlength !=
         :rows="rows"
         :aria-required="required"
         :aria-invalid="isInvalid ? 'true' : undefined"
-        :aria-describedby="[
-          props.ariaDescribedby,
-          $slots.helptext ? helpTextId : undefined,
-          isInvalid ? errorTextId : undefined,
-          shouldShowCounter ? counterId : undefined
-        ].filter(Boolean).join(' ') || undefined"
+        :aria-labelledby="label ? labelId : undefined"
+        :aria-describedby="describedBy"
         @blur="$emit('blur', $event)"
       ></textarea>
       <small v-if="shouldShowCounter" :id="counterId" class="form-text text-muted char-counter">
