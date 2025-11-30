@@ -79,10 +79,13 @@ const describedBy = computed(() => {
 
 <template>
   <fieldset :id="id" class="form-group" :aria-invalid="isInvalid ? 'true' : undefined">
-    <legend :id="labelId" class="multi-radio-legend">
+    <legend :id="labelId" class="weight-400 text-black font-size-14">
       {{ label }}
       <span v-if="required" aria-hidden="true" class="text-danger ms-1">*</span>
     </legend>
+    <small v-if="helptext" :id="helpTextId" class="form-text text-muted">
+      {{ helptext }}
+    </small>
     <div class="multi-radio-group">
       <div v-for="option in options" :key="option.value" class="form-check">
         <input
@@ -114,9 +117,6 @@ const describedBy = computed(() => {
         </label>
       </div>
     </div>
-    <small v-if="helptext" :id="helpTextId" class="form-text text-muted">
-      {{ helptext }}
-    </small>
     <div v-if="isInvalid || reserveErrorSpace"
          :id="errorTextId"
          class="error-text"
@@ -132,11 +132,6 @@ const describedBy = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 0;
-}
-.multi-radio-legend {
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
 }
 .error-text {
   display: block;

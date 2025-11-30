@@ -117,7 +117,7 @@ const describedBy = computed(() => {
     :aria-labelledby="labelId"
     :aria-describedby="describedBy"
   >
-    <legend :id="labelId" class="multi-checkbox-legend">
+    <legend :id="labelId" class="weight-400 text-black font-size-14">
       {{ label }}
       <span v-if="required" aria-hidden="true" class="text-danger ms-1">*</span>
     </legend>
@@ -153,11 +153,6 @@ const describedBy = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 0;
-}
-.multi-checkbox-legend {
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
 }
 .error-text {
   display: block;
