@@ -21,6 +21,7 @@ const props = withDefaults(defineProps<{
   reserveErrorSpace?: boolean;
   minSelectedItems?: number;
   maxSelectedItems?: number;
+  ariaDescribedby?: string;
 }>(), {
   required: false,
   errorMessage: '',
@@ -30,6 +31,7 @@ const props = withDefaults(defineProps<{
   modelValue: () => [],
   minSelectedItems: 0,
   maxSelectedItems: undefined, // will default to options.length in setup
+  ariaDescribedby: undefined,
 });
 
 const emit = defineEmits(['update:modelValue', 'blur']);
@@ -94,11 +96,28 @@ function toggleValue(optionValue: string | number) {
 
 const helpTextId = computed(() => `${props.id}-help`);
 const errorTextId = computed(() => `${props.id}-error`);
+const labelId = computed(() => `${props.id}-label`);
+
+const describedBy = computed(() => {
+  const ids = [
+    props.ariaDescribedby,
+    props.helptext ? helpTextId.value : undefined,
+    isInvalid.value ? errorTextId.value : undefined,
+  ].filter(Boolean);
+  const uniqueIds = Array.from(new Set(ids)).filter(id => id !== labelId.value);
+  return uniqueIds.length ? uniqueIds.join(' ') : undefined;
+});
 </script>
 
 <template>
-  <fieldset :id="id" class="form-group" :aria-invalid="isInvalid ? 'true' : undefined">
-    <legend class="multi-checkbox-legend">
+  <fieldset
+    :id="id"
+    class="form-group"
+    :aria-invalid="isInvalid ? 'true' : undefined"
+    :aria-labelledby="labelId"
+    :aria-describedby="describedBy"
+  >
+    <legend :id="labelId" class="multi-checkbox-legend">
       {{ label }}
       <span v-if="required" aria-hidden="true" class="text-danger ms-1">*</span>
     </legend>
@@ -111,6 +130,7 @@ const errorTextId = computed(() => `${props.id}-error`);
         :modelValue="selectedValues.includes(option.value)"
         :disabled="disabled || option.disabled"
         :required="false"
+        :aria-describedby="describedBy"
         @update:modelValue="val => toggleValue(option.value)"
         @blur="$emit('blur', $event)"
       />

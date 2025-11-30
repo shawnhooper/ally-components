@@ -18,6 +18,7 @@ const props = withDefaults(defineProps<{
   helptext?: string;
   disabled?: boolean;
   reserveErrorSpace?: boolean;
+  ariaDescribedby?: string;
 }>(), {
   required: false,
   errorMessage: '',
@@ -25,6 +26,7 @@ const props = withDefaults(defineProps<{
   disabled: false,
   reserveErrorSpace: true,
   modelValue: '',
+  ariaDescribedby: undefined,
 });
 
 const emit = defineEmits(['update:modelValue', 'blur']);
@@ -62,11 +64,22 @@ const selectedValue = computed({
 
 const helpTextId = computed(() => `${props.id}-help`);
 const errorTextId = computed(() => `${props.id}-error`);
+const labelId = computed(() => `${props.id}-label`);
+
+const describedBy = computed(() => {
+  const ids = [
+    props.ariaDescribedby,
+    props.helptext ? helpTextId.value : undefined,
+    isInvalid.value ? errorTextId.value : undefined,
+  ].filter(Boolean);
+  const uniqueIds = Array.from(new Set(ids)).filter(id => id !== labelId.value);
+  return uniqueIds.length ? uniqueIds.join(' ') : undefined;
+});
 </script>
 
 <template>
   <fieldset :id="id" class="form-group" :aria-invalid="isInvalid ? 'true' : undefined">
-    <legend class="multi-radio-legend">
+    <legend :id="labelId" class="multi-radio-legend">
       {{ label }}
       <span v-if="required" aria-hidden="true" class="text-danger ms-1">*</span>
     </legend>
@@ -83,17 +96,20 @@ const errorTextId = computed(() => `${props.id}-error`);
           :required="required"
           :aria-required="required ? 'true' : undefined"
           :aria-invalid="isInvalid ? 'true' : undefined"
-          :aria-describedby="[
-            $slots.helptext ? helpTextId : undefined,
-            isInvalid ? errorTextId : undefined,
-          ].filter(Boolean).join(' ') || undefined"
+          :aria-labelledby="option.label ? `${labelId} ${id}-${option.value}-label` : labelId"
+          :aria-describedby="describedBy"
           @change="emit('update:modelValue', option.value)"
           @blur="$emit('blur', $event)"
           :tabindex="(disabled || option.disabled)
             ? -1
             : (selectedValue === option.value || (!selectedValue && options[0].value === option.value) ? 0 : -1)"
         />
-        <label v-if="option.label" class="form-check-label" :for="`${id}-${option.value}`">
+        <label
+          v-if="option.label"
+          class="form-check-label"
+          :id="`${id}-${option.value}-label`"
+          :for="`${id}-${option.value}`"
+        >
           {{ option.label }}
         </label>
       </div>
