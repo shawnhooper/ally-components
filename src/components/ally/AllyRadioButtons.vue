@@ -134,14 +134,12 @@ const setOptionRef = (value: string | number, el: unknown) => {
           @change="emit('update:modelValue', option.value)"
           @keydown="onKeydown($event, option)"
           @blur="$emit('blur', $event)"
-          :tabindex="(disabled || option.disabled)
-            ? -1
-            : (selectedValue === option.value || (!selectedValue && options[0].value === option.value) ? 0 : -1)"
+          :tabindex="isOptionDisabled(option) ? -1 : 0"
           :ref="el => setOptionRef(option.value, el)"
         />
         <label
           v-if="option.label"
-          class="form-check-label"
+          class="form-check-label font-size-14"
           :id="`${id}-${option.value}-label`"
           :for="`${id}-${option.value}`"
         >
@@ -175,12 +173,19 @@ const setOptionRef = (value: string | number, el: unknown) => {
 .error-text.reserve-space {
   visibility: hidden;
 }
-.custom-radio .custom-control-input:focus + .custom-control-label::before {
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    border-color: #80bdff;
+.custom-radio .custom-control-input:focus-visible {
+  outline: 2px solid #80bdff;
+  outline-offset: 2px;
 }
-.custom-radio .custom-control-input.focus + .custom-control-label::before {
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    border-color: #80bdff;
+.custom-radio .custom-control-input:focus + .form-check-label::before,
+.custom-radio .custom-control-input.focus + .form-check-label::before {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-color: #80bdff;
+}
+.font-size-14 {
+  font-size: 14px !important;
+}
+label.font-size-14 {
+  font-size: 14px;
 }
 </style>
