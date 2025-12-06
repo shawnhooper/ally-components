@@ -14,6 +14,7 @@ export { default as AllyTextarea } from './components/ally/AllyTextarea.vue';
 export { default as AllySelect } from './components/ally/AllySelect.vue';
 export { default as AllyRadioButtons } from './components/ally/AllyRadioButtons.vue';
 export { default as AllyMultiCheckbox } from './components/ally/AllyMultiCheckbox.vue';
+export { default as AllyWrapper } from './components/ally/AllyWrapper.vue';
 
 // Utilities / Keys
 export * from './components/ally/allyFormKeys';
