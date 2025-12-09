@@ -82,11 +82,6 @@ const describedBy = computed(() => {
   return uniqueIds.length ? uniqueIds.join(' ') : undefined;
 });
 
-// Treat empty/undefined as placeholder selected so keyboard/selection start on it
-const isPlaceholderSelected = computed(() =>
-  props.modelValue === '' || props.modelValue === null || props.modelValue === undefined
-);
-
 </script>
 
 <template>
@@ -109,9 +104,10 @@ const isPlaceholderSelected = computed(() =>
       >
         <option
           value=""
-          hidden
+          disabled
+          selected
           aria-hidden="true"
-          :selected="isPlaceholderSelected"
+          role="presentation"
         >
           {{ placeholder }}
         </option>
