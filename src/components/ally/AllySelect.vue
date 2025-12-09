@@ -71,21 +71,21 @@ const labelId = computed(() => `${props.id}-label`);
 // Compute invalid state based on errorMessage prop
 const isInvalid = computed(() => !!props.errorMessage);
 
+// Placeholder is selected only when model has no value
+const isPlaceholderSelected = computed(() =>
+  props.modelValue === '' || props.modelValue === null || props.modelValue === undefined
+);
+
 const slots = useSlots();
 const describedBy = computed(() => {
   const ids = [
     props.ariaDescribedby,
-    slots.helptext ? helpTextId.value : undefined,
+    slots.helptext && isPlaceholderSelected.value ? helpTextId.value : undefined,
     isInvalid.value ? errorTextId.value : undefined,
   ].filter(Boolean);
   const uniqueIds = Array.from(new Set(ids)).filter(id => id !== labelId.value);
   return uniqueIds.length ? uniqueIds.join(' ') : undefined;
 });
-
-// Placeholder is selected only when model has no value
-const isPlaceholderSelected = computed(() =>
-  props.modelValue === '' || props.modelValue === null || props.modelValue === undefined
-);
 
 </script>
 
