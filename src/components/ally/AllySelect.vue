@@ -82,19 +82,6 @@ const describedBy = computed(() => {
   return uniqueIds.length ? uniqueIds.join(' ') : undefined;
 });
 
-// Provide ARIA positioning that ignores disabled options (and the hidden placeholder)
-const enabledOptions = computed(() => props.options.filter(option => !option.disabled));
-const ariaSetSize = computed(() => enabledOptions.value.length);
-const optionPositions = computed(() => {
-  const map = new Map<string | number, number>();
-  let position = 1;
-  for (const option of props.options) {
-    if (option.disabled) continue;
-    map.set(option.value, position);
-    position += 1;
-  }
-  return map;
-});
 </script>
 
 <template>
@@ -128,9 +115,6 @@ const optionPositions = computed(() => {
           :key="option.value"
           :value="option.value"
           :disabled="option.disabled"
-          :aria-selected="value === option.value ? 'true' : undefined"
-          :aria-setsize="!option.disabled ? ariaSetSize : undefined"
-          :aria-posinset="!option.disabled ? optionPositions.get(option.value) : undefined"
         >
           {{ option.label }}
         </option>
