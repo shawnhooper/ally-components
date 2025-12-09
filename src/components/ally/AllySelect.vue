@@ -115,7 +115,14 @@ const optionPositions = computed(() => {
         :aria-describedby="describedBy"
         @blur="$emit('blur', $event)"
       >
-        <option value="" disabled hidden aria-hidden="true">{{ placeholder }}</option>
+        <option
+          value=""
+          disabled
+          aria-hidden="true"
+          role="presentation"
+        >
+          {{ placeholder }}
+        </option>
         <option
           v-for="option in options"
           :key="option.value"
