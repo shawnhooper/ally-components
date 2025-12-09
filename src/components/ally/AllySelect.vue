@@ -105,6 +105,7 @@ const describedBy = computed(() => {
         <option
           value=""
           disabled
+          hidden
           selected
           aria-hidden="true"
           role="presentation"
