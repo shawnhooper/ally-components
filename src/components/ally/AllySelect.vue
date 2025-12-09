@@ -101,7 +101,7 @@ const describedBy = computed(() => {
         :aria-describedby="describedBy"
         @blur="$emit('blur', $event)"
       >
-        <option value="" disabled>{{ placeholder }}</option>
+        <option value="" disabled aria-hidden="true">{{ placeholder }}</option>
         <option
           v-for="option in options"
           :key="option.value"
