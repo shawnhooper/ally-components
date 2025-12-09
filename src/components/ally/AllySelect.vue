@@ -81,6 +81,20 @@ const describedBy = computed(() => {
   const uniqueIds = Array.from(new Set(ids)).filter(id => id !== labelId.value);
   return uniqueIds.length ? uniqueIds.join(' ') : undefined;
 });
+
+// Provide ARIA positioning that ignores disabled options (and the hidden placeholder)
+const enabledOptions = computed(() => props.options.filter(option => !option.disabled));
+const ariaSetSize = computed(() => enabledOptions.value.length);
+const optionPositions = computed(() => {
+  const map = new Map<string | number, number>();
+  let position = 1;
+  for (const option of props.options) {
+    if (option.disabled) continue;
+    map.set(option.value, position);
+    position += 1;
+  }
+  return map;
+});
 </script>
 
 <template>
@@ -94,19 +108,22 @@ const describedBy = computed(() => {
       <select
         :id="id"
         v-model="value"
-        :class="['form-select', { 'is-invalid': isInvalid }]"
+        :class="['form-select form-control', { 'is-invalid': isInvalid }]"
         :aria-required="required"
         :aria-invalid="isInvalid ? 'true' : undefined"
         :aria-labelledby="label ? labelId : undefined"
         :aria-describedby="describedBy"
         @blur="$emit('blur', $event)"
       >
-        <option value="" disabled aria-hidden="true">{{ placeholder }}</option>
+        <option value="" disabled hidden aria-hidden="true">{{ placeholder }}</option>
         <option
           v-for="option in options"
           :key="option.value"
           :value="option.value"
           :disabled="option.disabled"
+          :aria-selected="value === option.value ? 'true' : undefined"
+          :aria-setsize="!option.disabled ? ariaSetSize : undefined"
+          :aria-posinset="!option.disabled ? optionPositions.get(option.value) : undefined"
         >
           {{ option.label }}
         </option>
