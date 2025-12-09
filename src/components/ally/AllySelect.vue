@@ -109,7 +109,7 @@ const isPlaceholderSelected = computed(() =>
       >
         <option
           value=""
-          disabled
+          hidden
           aria-hidden="true"
           :selected="isPlaceholderSelected"
         >
