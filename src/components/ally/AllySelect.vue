@@ -82,6 +82,11 @@ const describedBy = computed(() => {
   return uniqueIds.length ? uniqueIds.join(' ') : undefined;
 });
 
+// Placeholder is selected only when model has no value
+const isPlaceholderSelected = computed(() =>
+  props.modelValue === '' || props.modelValue === null || props.modelValue === undefined
+);
+
 </script>
 
 <template>
@@ -106,7 +111,7 @@ const describedBy = computed(() => {
           value=""
           disabled
           hidden
-          selected
+          :selected="isPlaceholderSelected"
           aria-hidden="true"
           role="presentation"
         >
