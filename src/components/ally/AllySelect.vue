@@ -101,13 +101,12 @@ const describedBy = computed(() => {
         :aria-describedby="describedBy"
         @blur="$emit('blur', $event)"
       >
-        <option value="" disabled :aria-label="placeholder">{{ placeholder }}</option>
+        <option value="" disabled>{{ placeholder }}</option>
         <option
           v-for="option in options"
           :key="option.value"
           :value="option.value"
           :disabled="option.disabled"
-          :aria-label="option.label"
         >
           {{ option.label }}
         </option>
