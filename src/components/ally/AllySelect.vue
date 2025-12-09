@@ -81,12 +81,6 @@ const describedBy = computed(() => {
   const uniqueIds = Array.from(new Set(ids)).filter(id => id !== labelId.value);
   return uniqueIds.length ? uniqueIds.join(' ') : undefined;
 });
-
-// Treat empty/undefined as placeholder selected so keyboard/selection start on it
-const isPlaceholderSelected = computed(() =>
-  props.modelValue === '' || props.modelValue === null || props.modelValue === undefined
-);
-
 </script>
 
 <template>
@@ -100,21 +94,14 @@ const isPlaceholderSelected = computed(() =>
       <select
         :id="id"
         v-model="value"
-        :class="['form-select form-control', { 'is-invalid': isInvalid }]"
+        :class="['form-select', { 'is-invalid': isInvalid }]"
         :aria-required="required"
         :aria-invalid="isInvalid ? 'true' : undefined"
         :aria-labelledby="label ? labelId : undefined"
         :aria-describedby="describedBy"
         @blur="$emit('blur', $event)"
       >
-        <option
-          value=""
-          disabled
-          aria-hidden="true"
-          :selected="isPlaceholderSelected"
-        >
-          {{ placeholder }}
-        </option>
+        <option value="" disabled>{{ placeholder }}</option>
         <option
           v-for="option in options"
           :key="option.value"
