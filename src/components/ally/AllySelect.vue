@@ -114,14 +114,17 @@ const describedBy = computed(() => {
           :selected="isPlaceholderSelected"
           aria-hidden="true"
           role="presentation"
+          tabindex="-1"
         >
           {{ placeholder }}
         </option>
         <option
-          v-for="option in options"
+          v-for="(option, index) in options"
           :key="option.value"
           :value="option.value"
           :disabled="option.disabled"
+          :aria-posinset="index + 1"
+          :aria-setsize="options.length"
         >
           {{ option.label }}
         </option>
