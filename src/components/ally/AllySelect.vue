@@ -108,13 +108,9 @@ const describedBy = computed(() => {
         @blur="$emit('blur', $event)"
       >
         <option
+          v-if="isPlaceholderSelected"
           value=""
           disabled
-          hidden
-          :selected="isPlaceholderSelected"
-          aria-hidden="true"
-          role="presentation"
-          tabindex="-1"
         >
           {{ placeholder }}
         </option>
