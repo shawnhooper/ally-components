@@ -80,11 +80,11 @@ const inputClass = computed(() => [
 
 <template>
   <div class="form-group" :class="{ 'ally-has-error': isInvalid, 'ally-disabled': disabled }">
-    <div class="custom-checkbox">
+    <div class="custom-checkbox form-check">
       <input
         :id="id"
         type="checkbox"
-        class="custom-control-input"
+        class="form-check-input custom-control-input"
         :class="{ 'is-invalid': isInvalid }"
         v-model="checked"
         :required="required"
@@ -99,7 +99,7 @@ const inputClass = computed(() => [
         ].filter(Boolean).join(' ') || undefined"
         @blur="$emit('blur', $event)"
       />
-      <label v-if="label" class="custom-control-label" :for="id">
+      <label v-if="label" class="custom-control-label form-check-label" :for="id">
         {{ label }}
         <span v-if="required && !disabled" aria-hidden="true" class="text-danger ms-1">*</span>
       </label>
@@ -171,6 +171,26 @@ const inputClass = computed(() => [
 /* Ensure proper spacing for the form group */
 .form-group {
   margin-bottom: 1rem; /* Adjust as needed */
+}
+
+.custom-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding-left: 0;
+}
+
+.custom-checkbox .form-check-input {
+  margin-top: 0.2rem;
+  margin-left: 0;
+  float: none;
+  flex-shrink: 0;
+}
+
+.custom-checkbox .custom-control-label {
+  margin-bottom: 0;
+  line-height: 1.4;
+  flex: 1;
 }
 
 </style>
