@@ -114,7 +114,6 @@ const describedBy = computed(() => {
     :id="id"
     class="form-group"
     :aria-invalid="isInvalid ? 'true' : undefined"
-    :aria-labelledby="labelId"
     :aria-describedby="describedBy"
   >
     <legend :id="labelId" class="weight-400 text-black font-size-14">
