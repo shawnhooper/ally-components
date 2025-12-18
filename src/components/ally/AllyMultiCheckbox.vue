@@ -130,7 +130,6 @@ const describedBy = computed(() => {
         :modelValue="selectedValues.includes(option.value)"
         :disabled="disabled || option.disabled"
         :required="false"
-        :aria-describedby="describedBy"
         @update:modelValue="val => toggleValue(option.value)"
         @blur="$emit('blur', $event)"
       />
