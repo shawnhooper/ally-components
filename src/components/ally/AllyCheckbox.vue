@@ -76,7 +76,6 @@ const inputClass = computed(() => [
   { 'is-invalid': isInvalid.value && !props.disabled }
 ]);
 
-const inputAriaLabel = computed(() => props.label || undefined);
 </script>
 
 <template>
@@ -91,7 +90,6 @@ const inputAriaLabel = computed(() => props.label || undefined);
         :required="required"
         :disabled="disabled"
         tabindex="0"
-        :aria-label="inputAriaLabel"
         :aria-required="required ? 'true' : undefined"
         :aria-invalid="isInvalid ? 'true' : undefined"
         :aria-describedby="[
@@ -105,7 +103,6 @@ const inputAriaLabel = computed(() => props.label || undefined);
         v-if="label"
         class="custom-control-label form-check-label"
         :for="id"
-        aria-hidden="true"
       >
         {{ label }}
         <span v-if="required && !disabled" aria-hidden="true" class="text-danger ms-1">*</span>
