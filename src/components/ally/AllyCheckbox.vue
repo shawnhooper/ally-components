@@ -12,6 +12,7 @@ const props = withDefaults(defineProps<{
   modelValue: boolean; // v-model should be boolean for single checkbox
   required?: boolean;
   disabled?: boolean; // Added disabled prop
+  ariaLabelledby?: string; // For linking external labels
   ariaDescribedby?: string; // For linking external descriptions
   errorMessage?: string; // For validation error
   reserveErrorSpace?: boolean; // Add reserveErrorSpace prop
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<{
 }>(), {
   required: false,
   disabled: false, // Default disabled to false
+  ariaLabelledby: undefined,
   ariaDescribedby: undefined,
   errorMessage: '', // Default error message is empty
   reserveErrorSpace: true, // Default to true
@@ -66,6 +68,7 @@ const checked = computed({
 // Generate unique IDs for descriptive elements
 const helpTextId = computed(() => `${props.id}-help`);
 const errorTextId = computed(() => `${props.id}-error`);
+const labelId = computed(() => `${props.id}-label`);
 
 // Compute invalid state based on errorMessage prop
 const isInvalid = computed(() => !!props.errorMessage);
@@ -92,6 +95,7 @@ const inputClass = computed(() => [
         tabindex="0"
         :aria-required="required ? 'true' : undefined"
         :aria-invalid="isInvalid ? 'true' : undefined"
+        :aria-labelledby="props.ariaLabelledby || (label ? labelId : undefined)"
         :aria-describedby="[
           props.ariaDescribedby,
           $slots.helptext ? helpTextId : undefined,
@@ -102,6 +106,7 @@ const inputClass = computed(() => [
       <label
         v-if="label"
         class="custom-control-label form-check-label"
+        :id="labelId"
         :for="id"
       >
         {{ label }}

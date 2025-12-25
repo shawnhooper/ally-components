@@ -126,6 +126,7 @@ const describedBy = computed(() => {
         :key="option.value"
         :id="`${id}-${option.value}`"
         :label="option.label"
+        :ariaLabelledby="option.label ? `${labelId} ${id}-${option.value}-label` : labelId"
         :modelValue="selectedValues.includes(option.value)"
         :disabled="disabled || option.disabled"
         :required="false"
